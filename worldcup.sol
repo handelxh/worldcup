@@ -105,9 +105,7 @@ contract team {
   }
 }
 
-®®
-
-contract WorldCup is Ownable{
+contract WorldCup is Ownable, team{
   using SafeMath for uint256;
   uint256 public count_of_fans;
   uint256 public value_tick;
