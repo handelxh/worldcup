@@ -145,20 +145,21 @@ contract WorldCup is Ownable, team{
     fan_detail[fan[msg.sender].fan_id].support_team_id = 0;
     fan_detail[fan[msg.sender].fan_id].ticks = 0;
     fan[msg.sender].inited = 1;
+    count_of_fans= count_of_fans+1;
   }
 
   function support_team(uint256 support_team) public{
     uint256 _value;
     require(isEND == 0);
     require(msg.value >= value_tick);
-    require(fan[msg.sender].inited == 1)
+    require(fan[msg.sender].inited == 1);
+    require (support_team > 0);
+
     fan_detail[fan[msg.sender].fan_id].support_team_id = support_team;
-    transfer(msg.sender, owner, msg.value);
     balance = balance + msg.value;
     _value = msg.value;
     fan_detail[fan[msg.sender].fan_id].ticks = _value.div(value_tick);
     teams[support_team].supports = teams[support_team].supports.add(fan_detail[fan[msg.sender].fan_id].ticks);
-    Transfer(msg.sender, owner, msg.value);
   }
 
   function ref_result(uint256 Champion_team) {
@@ -166,7 +167,7 @@ contract WorldCup is Ownable, team{
     Champion_id = Champion_team;
     isEND = 1;
     if (isPayFee == 0) {
-      transfer(owner , get_fee_addr , balance.mul(0.01));
+      owner.transfer(balance.mul(0.01));
       isPayFee = 1;
     }
   }
@@ -176,9 +177,7 @@ contract WorldCup is Ownable, team{
     require(fan_detail[fan[msg.sender].fan_id].support_team_id == Champion_id );
     require(teams[Champion_id].supports != 0);
     fan[msg.sender].reward = (balance.mul(fan_detail[fan[msg.sender].fan_id].ticks)).div(teams[Champion_id].supports);
-    Transfer(owner, msg.sender, fan[msg.sender].reward);
+    msg.sender.transfer(fan[msg.sender].reward);
+    fan[msg.sender].inited = 0;
   }
 }
-
-
-
