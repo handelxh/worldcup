@@ -1,38 +1,4 @@
 pragma solidity ^0.4.18;
-/**
- * @title Ownable
- * @dev The Ownable contract has an owner address, and provides basic authorization control
- * functions, this simplifies the implementation of "user permissions".
- */
-contract Ownable {
-  address public owner;
-  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-  /**
-   * @dev The Ownable constructor sets the original `owner` of the contract to the sender
-   * account.
-   */
-  function Ownable() public {
-    owner = msg.sender;
-  }
-  /**
-   * @dev Throws if called by any account other than the owner.
-   */
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    _;
-  }
-  /**
-   * @dev Allows the current owner to transfer control of the contract to a newOwner.
-   * @param newOwner The address to transfer ownership to.
-   */
-  function transferOwnership(address newOwner) public onlyOwner {
-    require(newOwner != address(0));
-    require(msg.sender == owner);
-    OwnershipTransferred(owner, newOwner);
-    owner = newOwner;
-  }
-
-}
 
 
 /**
@@ -88,13 +54,13 @@ contract team {
 
       struct Team {
       uint id;
-      bool isKnockout;
-      bool isChampion;
+      uint isKnockout;
+      uint isChampion;
       uint supports;
   }
   Team[] public teams;
   function team() public{
-      for (var i = 1; i <= 32; i++) {
+      for (uint i = 1; i <= 32; i++) {
         teams.push(Team({
           id:i,
           isKnockout:0,
@@ -105,14 +71,15 @@ contract team {
   }
 }
 
-contract WorldCup is Ownable, team{
+contract WorldCup is  team{
   using SafeMath for uint256;
-  uint256 public count_of_fans;
-  uint256 public value_tick;
-  uint256 public balance;
-  uint256 Champion_id;
-  uint256 isEND;
-  uint256 isPayFee;
+  uint256 private count_of_fans;
+  uint256 private value_tick;
+  uint256 private balance;
+  uint256 private Champion_id;
+  uint256 private isEND;
+  uint256 private isPayFee;
+  address public owner;
 
   address get_fee_addr;
   struct Fan{
@@ -125,21 +92,22 @@ contract WorldCup is Ownable, team{
     uint256 support_team_id;
     uint256 ticks;
   }
-  mapping(address => Fan) public fan;
-  mapping(uint256 => Fan_detail) public fan_detail;
+  mapping(address => Fan) private fan;
+  mapping(uint256 => Fan_detail) private fan_detail;
 
   function WorldCup() public{
+    owner = msg.sender;
     count_of_fans = 0;
     balance = 0;
     value_tick = 100000000000000;
     Champion_id = 0;
     isEND = 0;
     isPayFee = 0;
-    get_fee_addr = 0x0123234123412341;  // need modify !!!!!!!!!!!!!!
+    get_fee_addr = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;  // need modify !!!!!!!!!!!!!!
   }
   function init_fan() public{
     require(isEND == 0);
-    require(fan[msg.sender],inited == 0);
+    require(fan[msg.sender].inited == 0);
     fan[msg.sender].reward = 0;
     fan[msg.sender].fan_id = count_of_fans;
     fan_detail[fan[msg.sender].fan_id].support_team_id = 0;
@@ -148,36 +116,39 @@ contract WorldCup is Ownable, team{
     count_of_fans= count_of_fans+1;
   }
 
-  function support_team(uint256 support_team) public{
+  function support_team(uint256 _support_team) public  payable {
     uint256 _value;
     require(isEND == 0);
     require(msg.value >= value_tick);
     require(fan[msg.sender].inited == 1);
-    require (support_team > 0);
+    require (_support_team > 0);
 
-    fan_detail[fan[msg.sender].fan_id].support_team_id = support_team;
+    fan_detail[fan[msg.sender].fan_id].support_team_id = _support_team;
     balance = balance + msg.value;
     _value = msg.value;
     fan_detail[fan[msg.sender].fan_id].ticks = _value.div(value_tick);
-    teams[support_team].supports = teams[support_team].supports.add(fan_detail[fan[msg.sender].fan_id].ticks);
+    teams[_support_team].supports = teams[_support_team].supports.add(fan_detail[fan[msg.sender].fan_id].ticks);
   }
 
-  function ref_result(uint256 Champion_team) {
-    require(msg.sender == owner)
+  function ref_result(uint256 Champion_team)public payable {
+    require(msg.sender == owner);
     Champion_id = Champion_team;
     isEND = 1;
     if (isPayFee == 0) {
-      owner.transfer(balance.mul(0.01));
+      get_fee_addr.transfer(balance.div(100));
       isPayFee = 1;
+      balance = balance - balance.div(100);
     }
   }
-  function get_reward(){
+  function get_reward()public payable {
     require(Champion_id != 0);
     require(fan[msg.sender].inited == 1);
     require(fan_detail[fan[msg.sender].fan_id].support_team_id == Champion_id );
     require(teams[Champion_id].supports != 0);
     fan[msg.sender].reward = (balance.mul(fan_detail[fan[msg.sender].fan_id].ticks)).div(teams[Champion_id].supports);
+    balance = balance - fan[msg.sender].reward;
     msg.sender.transfer(fan[msg.sender].reward);
     fan[msg.sender].inited = 0;
   }
+
 }
