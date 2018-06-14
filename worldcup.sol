@@ -73,7 +73,7 @@ contract team {
 
 contract WorldCup is  team{
   using SafeMath for uint256;
-  uint256 private count_of_fans;
+  uint256 public count_of_fans;
   uint256 private value_tick;
   uint256 private balance;
   uint256 private Champion_id;
@@ -92,14 +92,14 @@ contract WorldCup is  team{
     uint256 support_team_id;
     uint256 ticks;
   }
-  mapping(address => Fan) private fan;
-  mapping(uint256 => Fan_detail) private fan_detail;
+  mapping(address => Fan) public fan;
+  mapping(uint256 => Fan_detail) public fan_detail;
 
   function WorldCup() public{
     owner = msg.sender;
     count_of_fans = 0;
     balance = 0;
-    value_tick = 100000000000000;
+    value_tick = 10000000000000000;
     Champion_id = 0;
     isEND = 0;
     isPayFee = 0;
@@ -122,12 +122,15 @@ contract WorldCup is  team{
     require(msg.value >= value_tick);
     require(fan[msg.sender].inited == 1);
     require (_support_team > 0);
-
-    fan_detail[fan[msg.sender].fan_id].support_team_id = _support_team;
-    balance = balance + msg.value;
-    _value = msg.value;
-    fan_detail[fan[msg.sender].fan_id].ticks = _value.div(value_tick);
-    teams[_support_team].supports = teams[_support_team].supports.add(fan_detail[fan[msg.sender].fan_id].ticks);
+    require (_support_team <= 32);
+    if(fan_detail[fan[msg.sender].fan_id].support_team_id == 0||fan_detail[fan[msg.sender].fan_id].support_team_id == _support_team )//just buy ticks in first time
+    {
+        fan_detail[fan[msg.sender].fan_id].support_team_id = _support_team;
+        balance = balance + msg.value;
+        _value = msg.value;
+        fan_detail[fan[msg.sender].fan_id].ticks =fan_detail[fan[msg.sender].fan_id].ticks + _value.div(value_tick);
+        teams[_support_team].supports = teams[_support_team].supports.add(fan_detail[fan[msg.sender].fan_id].ticks);
+    }
   }
 
   function ref_result(uint256 Champion_team)public payable {
@@ -146,9 +149,23 @@ contract WorldCup is  team{
     require(fan_detail[fan[msg.sender].fan_id].support_team_id == Champion_id );
     require(teams[Champion_id].supports != 0);
     fan[msg.sender].reward = (balance.mul(fan_detail[fan[msg.sender].fan_id].ticks)).div(teams[Champion_id].supports);
+    teams[Champion_id].supports = teams[Champion_id].supports - fan_detail[fan[msg.sender].fan_id].ticks;
     balance = balance - fan[msg.sender].reward;
     msg.sender.transfer(fan[msg.sender].reward);
     fan[msg.sender].inited = 0;
   }
-
+ function get_count_of_fan() public returns(uint256) {
+     return count_of_fans;
+ }
+ function get_fans_ticks()public returns(uint256) {
+     require(fan[msg.sender].inited == 1);
+     return fan_detail[fan[msg.sender].fan_id].ticks;
+ }
+ function get_fans_support_team()public returns(uint256){
+     require(fan[msg.sender].inited == 1);
+     return fan_detail[fan[msg.sender].fan_id].support_team_id;
+ }
+ function get_balance() public returns(uint256){
+     return balance;
+ }
 }
