@@ -133,10 +133,15 @@ contract WorldCup is  team{
     }
   }
 
+  function ref_end() public {
+    require(msg.sender == owner);
+    isEND = 1;
+  }
+
   function ref_result(uint256 Champion_team) public {
     require(msg.sender == owner);
+    require(isEND == 1);
     Champion_id = Champion_team;
-    isEND = 1;
     if (isPayFee == 0) {
       get_fee_addr.transfer(balance.div(100));
       isPayFee = 1;
