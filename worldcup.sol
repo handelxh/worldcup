@@ -129,6 +129,7 @@ contract WorldCup is  team{
 
   function set_tick(uint256 _tick) public onlyOwner {
     require(value_tick != _tick);
+    require(_tick >= (10**16));
     value_tick = _tick;
   }
 
