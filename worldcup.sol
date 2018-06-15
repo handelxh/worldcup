@@ -116,9 +116,16 @@ contract WorldCup is  team{
     count_of_fans= count_of_fans+1;
   }
 
-  function change_parameter(address _fee_addr) {
+  function set_fee_addr(address _fee_addr) {
     require(msg.sender == owner);
+    require(get_fee_addr != _fee_addr);
     get_fee_addr = _fee_addr;
+  }
+
+  function set_tick(uint256 _tick) {
+    require(msg.sender == owner);
+    require(value_tick != _tick);
+    value_tick = _tick;
   }
 
   function support_team(uint256 _support_team) public  payable {
