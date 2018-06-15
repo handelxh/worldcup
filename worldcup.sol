@@ -116,6 +116,11 @@ contract WorldCup is  team{
     count_of_fans= count_of_fans+1;
   }
 
+  function change_parameter(address _fee_addr) {
+    require(msg.sender == owner);
+    get_fee_addr = _fee_addr;
+  }
+
   function support_team(uint256 _support_team) public  payable {
     uint256 _value;
     require(isEND == 0);
@@ -133,17 +138,22 @@ contract WorldCup is  team{
     }
   }
 
-  function ref_result(uint256 Champion_team)public payable {
+  function ref_end() public {
     require(msg.sender == owner);
-    Champion_id = Champion_team;
     isEND = 1;
+  }
+
+  function ref_result(uint256 Champion_team) public {
+    require(msg.sender == owner);
+    require(isEND == 1);
+    Champion_id = Champion_team;
     if (isPayFee == 0) {
       get_fee_addr.transfer(balance.div(100));
       isPayFee = 1;
       balance = balance - balance.div(100);
     }
   }
-  function get_reward()public payable {
+  function get_reward() public {
     require(Champion_id != 0);
     require(fan[msg.sender].inited == 1);
     require(fan_detail[fan[msg.sender].fan_id].support_team_id == Champion_id );
