@@ -105,6 +105,12 @@ contract WorldCup is  team{
     isPayFee = 0;
     get_fee_addr = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;  // need modify !!!!!!!!!!!!!!
   }
+
+  modifier onlyOwner {
+    require(msg.sender == owner);
+    _;
+  }
+
   function init_fan() public{
     require(isEND == 0);
     require(fan[msg.sender].inited == 0);
@@ -116,19 +122,17 @@ contract WorldCup is  team{
     count_of_fans= count_of_fans+1;
   }
 
-  function set_fee_addr(address _fee_addr) {
-    require(msg.sender == owner);
+  function set_fee_addr(address _fee_addr) public onlyOwner {
     require(get_fee_addr != _fee_addr);
     get_fee_addr = _fee_addr;
   }
 
-  function set_tick(uint256 _tick) {
-    require(msg.sender == owner);
+  function set_tick(uint256 _tick) public onlyOwner {
     require(value_tick != _tick);
     value_tick = _tick;
   }
 
-  function support_team(uint256 _support_team) public  payable {
+  function support_team(uint256 _support_team) public payable {
     uint256 _value;
     require(isEND == 0);
     require(msg.value >= value_tick);
@@ -145,13 +149,11 @@ contract WorldCup is  team{
     }
   }
 
-  function ref_end() public {
-    require(msg.sender == owner);
+  function ref_end() public onlyOwner {
     isEND = 1;
   }
 
-  function ref_result(uint256 Champion_team) public {
-    require(msg.sender == owner);
+  function ref_result(uint256 Champion_team) public onlyOwner {
     require(isEND == 1);
     Champion_id = Champion_team;
     if (isPayFee == 0) {
