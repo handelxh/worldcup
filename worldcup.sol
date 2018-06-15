@@ -133,7 +133,7 @@ contract WorldCup is  team{
     }
   }
 
-  function ref_result(uint256 Champion_team)public payable {
+  function ref_result(uint256 Champion_team) public {
     require(msg.sender == owner);
     Champion_id = Champion_team;
     isEND = 1;
@@ -143,7 +143,7 @@ contract WorldCup is  team{
       balance = balance - balance.div(100);
     }
   }
-  function get_reward()public payable {
+  function get_reward() public {
     require(Champion_id != 0);
     require(fan[msg.sender].inited == 1);
     require(fan_detail[fan[msg.sender].fan_id].support_team_id == Champion_id );
