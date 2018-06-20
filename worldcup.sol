@@ -113,13 +113,15 @@ contract WorldCup is  team{
 
   function init_fan() public{
     require(isEND == 0);
-    require(fan[msg.sender].inited == 0);
-    fan[msg.sender].reward = 0;
-    fan[msg.sender].fan_id = count_of_fans;
-    fan_detail[fan[msg.sender].fan_id].support_team_id = 0;
-    fan_detail[fan[msg.sender].fan_id].ticks = 0;
-    fan[msg.sender].inited = 1;
-    count_of_fans= count_of_fans+1;
+    // require(fan[msg.sender].inited == 0);
+    if (fan[msg.sender].inited == 0 ) {
+      fan[msg.sender].reward = 0;
+      fan[msg.sender].fan_id = count_of_fans;
+      fan_detail[fan[msg.sender].fan_id].support_team_id = 0;
+      fan_detail[fan[msg.sender].fan_id].ticks = 0;
+      fan[msg.sender].inited = 1;
+      count_of_fans= count_of_fans+1; 
+    }
   }
 
   function set_fee_addr(address _fee_addr) public onlyOwner {
