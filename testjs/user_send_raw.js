@@ -44,7 +44,7 @@ var gambing = 0.7;
 var contract_addr = '0xe00c7fd30a8ce9db49d69a48989599911cacbdf8'
 var privateKey = new Buffer('6a0b2e83b3243fffae80393b97f3c81e02971ade4bfda531873c19797ab6a1ea', 'hex')
 var account_addr = '0x66E544b0562e224e8acEB10497Cdce5781439C62';
-count = web3.eth.getTransactionCount(account_addr);
+var count = web3.eth.getTransactionCount(account_addr);
   console.log(count);
 
 
