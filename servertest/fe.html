@@ -1,0 +1,120 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		* {
+			font-size: 20px;
+			line-height: 2;
+			outline: none;
+		}
+		.center {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		.line {
+			margin: 20px 0;
+			display: flex;
+		}
+		.key {
+			flex: 1;
+		}
+		input, select, #result {
+			margin-left: 20px;
+			padding-left: 10px;
+			width: 300px;
+		}
+		button {
+			margin-top: 40px;
+			margin-left: auto;
+		    margin-right: auto;
+		    display: block;
+		    padding: 0 20px;
+		    cursor: pointer;
+		}
+		.result {
+			margin-top: 20px;
+			display: flex;
+		}
+	</style>
+</head>
+<body>
+	<div class="center">
+		<div class="line">
+			<span class="key">gambing(Price Unit：ETH):</span>
+			<input type="text" id="first">
+		</div>
+		<div class="line">
+			<span class="key">wallet privateKey:</span>
+			<input type="text" id="second">
+		</div>
+		<div class="line">
+			<span class="key">wallet addr:</span>
+			<input type="text" id="third">
+		</div>
+		<div class="line">
+			<span class="key">support team</span>
+			<select id="fourth">
+			 	<option value="00">中国</option>
+			 	<option value="01">俄罗斯</option>
+			 	<option value="02">沙特阿拉伯</option>
+			 	<option value="03">埃及</option>
+			 	<option value="04">乌拉圭</option>
+			 	<option value="05">葡萄牙</option>
+			 	<option value="06">西班牙</option>
+			 	<option value="07">摩洛哥</option>
+			 	<option value="08">伊朗</option>
+			 	<option value="09">法国</option>
+			 	<option value="10">澳大利亚</option>
+			 	<option value="11">秘鲁</option>
+			 	<option value="12">丹麦</option>
+			 	<option value="13">阿根廷</option>
+			 	<option value="14">冰岛</option>
+			 	<option value="15">克罗地亚</option>
+			 	<option value="16">尼日利亚</option>
+			 	<option value="17">巴西</option>
+			 	<option value="18">瑞士</option>
+			 	<option value="19">哥斯达黎加</option>
+			 	<option value="20">塞尔维亚</option>
+			 	<option value="21">德国</option>
+			 	<option value="22">墨西哥</option>
+			 	<option value="23">瑞典</option>
+			 	<option value="24">韩国</option>
+			 	<option value="25">比利时</option>
+			 	<option value="26">巴拿马</option>
+			 	<option value="27">突尼斯</option>
+			 	<option value="28">英格兰</option>
+			 	<option value="29">波兰</option>
+			 	<option value="30">塞内加尔</option>
+			 	<option value="31">哥伦比亚</option>
+				<option value="32">日本</option>			
+			</select>
+		</div>
+		<button id="submit">提交</button>
+		<div class="result">
+			<span class="key">结果：</span>
+			<div id="result"></div>
+		</div>
+	</div>
+	<script>
+		document.getElementById("submit").addEventListener("click", () => {
+			let first = document.getElementById("first").value;
+			let second = document.getElementById("second").value;
+			let third = document.getElementById("third").value;
+			let fourth = document.getElementById("fourth").value;
+			if (first && second && third && fourth) {
+				fetch(`/gamble?first=${first}&second=${second}&third=${third}&fourth=${fourth}`)
+				.then((response) => {
+					return response.json();
+				}).then((result) => {
+					document.getElementById('result').innerHTML = result.text;
+				})	
+			} else {
+				alert('输入框为空后端就报错')
+			}
+		});
+	</script>
+</body>
+</html>
