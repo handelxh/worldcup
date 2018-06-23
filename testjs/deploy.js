@@ -19,8 +19,8 @@ if(!connected){
 if(!web3.currentProvider)
     web3.setProvider(new web3.providers.HttpProvider("http://localhost:7545"));
 
-web3.eth.defaultAccount = '0xdd60A5C72B920Ca9Ea0cbBb8880696DBC95f27fb';
 var accounts = web3.eth.accounts;
+web3.eth.defaultAccount = accounts[0];
 // console.log(accounts); 
 
 // var balance = web3.eth.getBalance('0x160b41d953cad924c605371c52be9ea163837310');
@@ -44,7 +44,7 @@ let worldcup = web3.eth.contract(JSON.parse(abi));
 // console.log(worldcup); 
 ///////////////////////////////////deploy contract
 var myContractReturned = worldcup.new( {
-   from:'0xdd60A5C72B920Ca9Ea0cbBb8880696DBC95f27fb',
+   from:accounts[0],
    data:bytecode,
    gas:gasEstimate}, function(err, myContract){
     if(!err) {
