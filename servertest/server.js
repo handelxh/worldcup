@@ -33,6 +33,7 @@ function sendFile (res, path) {
 function gamble (first, second, third, fourth, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
 
+    try{
 
     var Web3 = require('web3');
     var Tx = require('ethereumjs-tx');
@@ -58,7 +59,7 @@ function gamble (first, second, third, fourth, res) {
 
 ///////////////////////////////////////////////////////////
     var gambing = first;
-    var contract_addr = '0x2efcc8d87bbdbf3b907bf13ec1596393b1cc5ac8'
+    var contract_addr = '0x83e74446865e08f0a899fbd6cc261ef6199b8b83'
     var privateKey = new Buffer(second, 'hex')
     var account_addr = third;
     var count = web3.eth.getTransactionCount(account_addr);
@@ -83,7 +84,7 @@ function gamble (first, second, third, fourth, res) {
 
     web3.eth.sendRawTransaction(serializedTx.toString('hex'), function(err, hash) {
       if (!err)
-        console.log(hash); 
+        console.log(''); 
     });
 
 
@@ -112,7 +113,9 @@ function gamble (first, second, third, fourth, res) {
         console.log(hash); 
 
         /** 处理参数 begin  */
-        let returnText = '下注成功';
+        let returnText = '下注成功，请等待矿工打包';
+        if (hash == 'undefined'|| !hash || hash == undefined)
+            returnText = '下注失败'; 
         /** 处理参数 end */
         let result = {
             text: returnText
@@ -122,6 +125,19 @@ function gamble (first, second, third, fourth, res) {
     });
 
 
+    }
+    catch(err){
+      console.log('some error')
+
+        /** 处理参数 begin  */
+        let returnText = '下注失败';
+        /** 处理参数 end */
+        let result = {
+            text: returnText
+        }
+        let json = JSON.stringify(result);
+        res.end(json);
+    }
 
 }
 

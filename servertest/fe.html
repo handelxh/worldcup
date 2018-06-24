@@ -105,6 +105,7 @@
 			let third = document.getElementById("third").value;
 			let fourth = document.getElementById("fourth").value;
 			if (first && second && third && fourth) {
+				document.getElementById('result').innerHTML = 'wating...';
 				fetch(`/gamble?first=${first}&second=${second}&third=${third}&fourth=${fourth}`)
 				.then((response) => {
 					return response.json();
@@ -112,7 +113,7 @@
 					document.getElementById('result').innerHTML = result.text;
 				})	
 			} else {
-				alert('输入框为空后端就报错')
+				alert('不能为空')
 			}
 		});
 	</script>

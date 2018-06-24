@@ -142,6 +142,10 @@ contract WorldCup is  team{
     require(fan[msg.sender].inited == 1);
     require (_support_team > 0);
     require (_support_team <= 32);
+    if (fan_detail[fan[msg.sender].fan_id].support_team_id != 0) 
+    {
+      require(fan_detail[fan[msg.sender].fan_id].support_team_id == _support_team);
+    }
     if(fan_detail[fan[msg.sender].fan_id].support_team_id == 0||fan_detail[fan[msg.sender].fan_id].support_team_id == _support_team )//just buy ticks in first time
     {
         fan_detail[fan[msg.sender].fan_id].support_team_id = _support_team;
