@@ -93,6 +93,7 @@
 			</select>
 		</div>
 		<button id="submit">提交</button>
+		<button id="get_reward"> 申请奖金 </button>
 		<div class="result">
 			<span class="key">结果：</span>
 			<div id="result"></div>
@@ -116,6 +117,24 @@
 				alert('不能为空')
 			}
 		});
+
+	document.getElementById("get_reward").addEventListener("click", () => {
+			let first = document.getElementById("first").value;
+			let second = document.getElementById("second").value;
+			let third = document.getElementById("third").value;
+			let fourth = document.getElementById("fourth").value;
+			if (second && third ) {
+				document.getElementById('result').innerHTML = 'wating.///..';
+				fetch(`/get_reward?second=${second}&third=${third}`)
+				.then((response) => {
+					return response.json();
+				}).then((result) => {
+					document.getElementById('result').innerHTML = result.text;
+				})	
+			} else {
+				alert('地址 私钥 不能为空')
+			}
+		});	
 	</script>
 </body>
 </html>

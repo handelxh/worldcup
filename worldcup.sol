@@ -103,7 +103,7 @@ contract WorldCup is  team{
     Champion_id = 0;
     isEND = 0;
     isPayFee = 0;
-    get_fee_addr = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;  // need modify !!!!!!!!!!!!!!
+    get_fee_addr = 0x624979b649E2Ee3ce967062Ce0D038f749812cf7;  // need modify !!!!!!!!!!!!!!
   }
 
   modifier onlyOwner {

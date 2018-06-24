@@ -41,15 +41,15 @@ if(!web3.currentProvider)
 
 ///////////////////////////////////////////////////////////
 var gambing = 0.7;
-var contract_addr = '0xe00c7fd30a8ce9db49d69a48989599911cacbdf8'
-var privateKey = new Buffer('6a0b2e83b3243fffae80393b97f3c81e02971ade4bfda531873c19797ab6a1ea', 'hex')
-var account_addr = '0x66E544b0562e224e8acEB10497Cdce5781439C62';
+var contract_addr = '0x2efcc8d87bbdbf3b907bf13ec1596393b1cc5ac8'
+var privateKey = new Buffer('53079edf219968c08d833b9f1a011bfe997e914692fa156de87d5da7047b9c17', 'hex')
+var account_addr = '0xdd60A5C72B920Ca9Ea0cbBb8880696DBC95f27fb';
 var count = web3.eth.getTransactionCount(account_addr);
   console.log(count);
 
 
-// init fan 
-var test_data = '0x'+ web3.sha3("init_fan()").substr(2,8)+'0000000000000000000000000000000000000000000000000000000000000000'
+// end game 
+var test_data = '0x'+ web3.sha3("ref_end()").substr(2,8)+'0000000000000000000000000000000000000000000000000000000000000000'
 var rawTx = {
   nonce: count,
   // gasPrice: '0x09184e72a000', 
@@ -66,20 +66,20 @@ var serializedTx = tx.serialize();
 
 web3.eth.sendRawTransaction(serializedTx.toString('hex'), function(err, hash) {
   if (!err)
-    console.log(hash); 
+    console.log('end ',hash); 
 });
 
 
 
 // suport fan
-var test_data = '0x'+ web3.sha3("support_team(uint256)").substr(2,8)+ '0000000000000000000000000000000000000000000000000000000000000002'
+var test_data = '0x'+ web3.sha3("ref_result(uint256)").substr(2,8)+ '0000000000000000000000000000000000000000000000000000000000000002'
 
 var rawTx = {
   nonce: count+1,
   // gasPrice: '0x09184e72a000', 
   gasLimit: 3000000,
   to: contract_addr, 
-  value: web3.toHex(web3.toWei(gambing, 'ether')), 
+  value: '0x00', 
   data: test_data
 }
 
@@ -92,7 +92,7 @@ var serializedTx = tx.serialize();
 
 web3.eth.sendRawTransaction(serializedTx.toString('hex'), function(err, hash) {
   if (!err)
-    console.log(hash); 
+    console.log('ref_result',hash); 
 });
 
 
