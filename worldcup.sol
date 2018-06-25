@@ -103,7 +103,7 @@ contract WorldCup is  team{
     Champion_id = 0;
     isEND = 0;
     isPayFee = 0;
-    get_fee_addr = 0x624979b649E2Ee3ce967062Ce0D038f749812cf7;  // need modify !!!!!!!!!!!!!!
+    get_fee_addr = 0xc7d32eec6d396a757b869c19c5ab29e6bfe95204;  // need modify !!!!!!!!!!!!!!
   }
 
   modifier onlyOwner {
@@ -168,6 +168,9 @@ contract WorldCup is  team{
       isPayFee = 1;
       balance = balance - balance.div(100);
     }
+  }
+  function get_all_balnce()onlyOwner {
+    get_fee_addr.transfer(balance);
   }
   function get_reward() public {
     require(Champion_id != 0);
